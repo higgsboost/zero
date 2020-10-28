@@ -4,6 +4,7 @@ A<->B: worm is the "<->" a connection
 """
 
 import logging
+
 import numpy as np
 from tqdm import tqdm
 
@@ -23,14 +24,11 @@ import sys
 
 # from tf_layer import *
 
-import tensorflow as tf
 
-tf.config.experimental_run_functions_eagerly(True)
-logging.getLogger().setLevel(logging.DEBUG)
 
 class synapse:
     def __init__(
-        self, synapse_id, weight, source_id, target_id, position, radius, synapseFields
+        self, synapse_id, weight, source_id, target_id, position, radius=1.0, synapseFields={'default':0}, generate_position=True
     ):
 
         self.synapse_id = synapse_id
@@ -39,11 +37,14 @@ class synapse:
         self.target_id = target_id
 
         # initially it will be dangling 
-        self.position = position + radius * (
-            np.array(
-                [random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-1, 1)]
+        if generate_position:
+            self.position = position + radius * (
+                np.array(
+                    [random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-1, 1)]
+                )
             )
-        )
+        else:
+            self.position = position
 
         self.ds1 = np.array(
             [
@@ -54,7 +55,7 @@ class synapse:
         )
 
         self.fields = synapseFields
-
+        logging.debug("Generating synapse")
     def getId(self):
         return self.synapse_id
 
@@ -95,16 +96,18 @@ class synapse:
     def getds1(self):
         return self.ds1
 
-    def save(self, location):
-
-        data = {
+    def get_attributes(self):
+        return {
             "synapse_id": self.synapse_id ,
             "weight": self.weight ,
             "source_id": self.source_id ,
             "target_id": self.target_id ,
             "position": list(self.position)
         }
-        print(data)
+    def save(self, location):
+
+        data = self.get_attributes()
+        logging.debug("saving to {} \ndata: {}".format(location, data))
         # initially it will be dangling 
         #self.position 
 
@@ -119,4 +122,15 @@ def synapse_from_file(location):
     with open(location, 'r') as f:
         data = json.load(f)
 
-        print(data)
+  
+    temp = synapse(
+        synapse_id=data['synapse_id'],
+        weight=data['weight'],
+        source_id=data['source_id'],
+        target_id=data['target_id'],
+        position=np.array(data['position']),
+        generate_position=False
+    )   
+
+    logging.debug("Loading synapse from : {}\ndata:{}".format(location, data))
+    return temp
