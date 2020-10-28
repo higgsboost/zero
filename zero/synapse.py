@@ -30,7 +30,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 class synapse:
     def __init__(
-        self, load_from_file, synapse_id, weight, source_id, target_id, position, radius, synapseFields
+        self, synapse_id, weight, source_id, target_id, position, radius, synapseFields
     ):
 
         self.synapse_id = synapse_id
@@ -96,7 +96,27 @@ class synapse:
         return self.ds1
 
     def save(self, location):
-        pass
-        
 
-        
+        data = {
+            "synapse_id": self.synapse_id ,
+            "weight": self.weight ,
+            "source_id": self.source_id ,
+            "target_id": self.target_id ,
+            "position": list(self.position)
+        }
+        print(data)
+        # initially it will be dangling 
+        #self.position 
+
+        with open(location, 'w') as f:
+            json.dump(data, f)
+
+
+
+
+
+def synapse_from_file(location):
+    with open(location, 'r') as f:
+        data = json.load(f)
+
+        print(data)

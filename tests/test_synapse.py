@@ -2,12 +2,18 @@ import unittest
 
 import numpy as np
 
-from .context import src
+from .context import zero
 
 class TestSynapse(unittest.TestCase):
-    def test_1(self):
+    def test_setup(self):
         
-        syn = src.synapse(False, 1, None, 0, 1, np.array([0,0,0]), 1, {'a':0.0,'b':0.0})
+        syn = zero.synapse.synapse(1, None, 0, 1, np.array([0,0,0]), 1, {'a':0.0,'b':0.0})
+
+        syn.save('/tmp/test_syn_4123')
+
+    def test_loader(self):
+        zero.synapse.synapse_from_file('/tmp/test_syn_4123')
+
 
 
    
