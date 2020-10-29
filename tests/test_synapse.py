@@ -5,7 +5,7 @@ import numpy as np
 from .context import zero
 
 import logging
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
 class TestSynapse(unittest.TestCase):
 
 
