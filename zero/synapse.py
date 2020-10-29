@@ -116,13 +116,7 @@ class synapse:
 
 
 
-
-
-def synapse_from_file(location):
-    with open(location, 'r') as f:
-        data = json.load(f)
-
-  
+def synapse_from_json(data):
     temp = synapse(
         synapse_id=data['synapse_id'],
         weight=data['weight'],
@@ -131,6 +125,15 @@ def synapse_from_file(location):
         position=np.array(data['position']),
         generate_position=False
     )   
+    return temp
 
+
+
+def synapse_from_file(location):
+    with open(location, 'r') as f:
+        data = json.load(f)
+
+    temp = synapse_from_json(data)
+    
     logging.debug("Loading synapse from : {}\ndata:{}".format(location, data))
     return temp

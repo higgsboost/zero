@@ -36,19 +36,21 @@ class TestNeuron(unittest.TestCase):
         self.result = result_
         
 
-        neuron.save('')
+        neuron.save('/tmp/test_neuron.json')
 
     def test_neuron(self):
-        neuron = zero.neuron.neuron(
-            numSynapse=100,
-            nucleus_id=1,
-            neuron_radius=1,
-            synapse_radius=1,
-            neuronFields={'a':0},
-            synapseFields={'a':0},
-        )
 
-        print('-----', neuron)
+        neuron = zero.neuron.neuron_from_file('/tmp/test_neuron.json')
+        # neuron = zero.neuron.neuron(
+        #     numSynapse=100,
+        #     nucleus_id=1,
+        #     neuron_radius=1,
+        #     synapse_radius=1,
+        #     neuronFields={'a':0},
+        #     synapseFields={'a':0},
+        # )
+
+        # print('-----', neuron)
 
         #import pdb; pdb.set_trace()
 

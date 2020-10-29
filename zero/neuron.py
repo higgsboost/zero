@@ -40,9 +40,11 @@ class neuron:
         firing_value=500.0,
         predetermined_position=np.array([]),
         modifiable=True, # Modifiable weights
-        loading_synapse_from_file=False,
-        loading_input_synapse_from_file=False,
-        loading_neuron_weights_from_file=False,
+
+        loading_from_file = False,
+        # loading_synapse_from_file=False,
+        # loading_input_synapse_from_file=False,
+        # loading_neuron_weights_from_file=False,
         
 
     ):
@@ -96,7 +98,7 @@ class neuron:
         # This is for the outputs
         self.synapse_array = []
 
-        if loading_synapse_from_file is False:
+        if loading_from_file is False:
             for i in range(numSynapse):
                 self.synapse_array.append(
                     synapse(
@@ -113,13 +115,13 @@ class neuron:
             pass # TODO
         
 
-        if loading_input_synapse_from_file is False:
+        if loading_from_file is False:
 
             self.input_synapse_array = []
         else:
             pass # TODO
 
-        if loading_neuron_weights_from_file is False:
+        if loading_from_file is False:
             self.neuronBlock = neuronBlock()
         else:
             pass
@@ -169,6 +171,9 @@ class neuron:
         #print('outpout_wiehgt', output_weight.shape)
         # print('current weight', len(current_weight))
         set_weights(output_weight, self.neuronBlock.weights)
+
+    def append_synapse_array(self, syn_):
+        self.synapse_array.append(syn_)
 
     def append_input_synapse_array(self, syn_):
         self.input_synapse_array.append(syn_)
@@ -249,18 +254,25 @@ class neuron:
     def get_attributes(self):
 
         weights, shapes = get_weights(self.neuronBlock.weights)
+
+        # Convert np -> float
+        weights = [float(w) for w in weights]
+        
         attributes =  {
             "numSynapse": self.numSynapse ,
             "nucleus_id": self.nucleus_id ,
             "neuron_radius": self.neuron_radius ,
+            "synapse_radius":self.synapse_radius,
             "fields": self.fields ,
             "is_input": self.is_input,
             "is_output": self.is_output,
             "is_reward": self.is_reward,
             "modifiable": self.modifiable,
+            "neuronFields":self.fields,
+            "synapseFields":self.synapseFields,
             "position": list(self.position),
-            "synapse_id_array": [s.get_attributes() for s in self.synapse_array],
-            "input_synapse_id_array": [s.get_attributes() for s in self.input_synapse_array],
+            "synapse_array": [s.get_attributes() for s in self.synapse_array],
+            "input_synapse_array": [s.get_attributes() for s in self.input_synapse_array],
             "neuron_weights": weights,
             "neuron_shapes": shapes,
             "firing_value": self.firing_value
@@ -274,8 +286,64 @@ class neuron:
         
         return attributes
     def save(self, location):
-        attri = self.get_attributes()
-        print(attri)
-        pass
+        data = self.get_attributes()
+        print(data)
+        with open(location, 'w') as f:
+            json.dump(data, f)
 
 
+
+
+
+
+def neuron_from_file(location):
+    with open(location, 'r') as f:
+        data = json.load(f)
+
+    synapse_array = [synapse_from_json(d) for d in data['synapse_array']]
+    input_synapse_array = [synapse_from_json(d) for d in data['input_synapse_array']]
+
+
+    n = neuron(
+        numSynapse=data['numSynapse'],
+        nucleus_id=data['nucleus_id'],
+        neuron_radius=data['neuron_radius'],
+        synapse_radius=data['synapse_radius'],
+        neuronFields=data['neuronFields'],
+        synapseFields=data['synapseFields'],
+        is_input=data['is_input'],
+        is_output=data['is_output'],
+        is_reward=data['is_reward'],
+        firing_value=data['firing_value'],
+        predetermined_position=data['position'],
+        modifiable=data['modifiable'],
+        loading_from_file = True,
+    )
+
+
+
+    _ = [n.append_input_synapse_array(s) for s in input_synapse_array]
+    _ = [n.append_synapse_array(s) for s in synapse_array]
+
+    # load weights
+
+
+        # loading_synapse_from_file=False,
+        # loading_input_synapse_from_file=False,
+        # loading_neu
+
+    
+
+    
+    
+    # temp = synapse(
+    #     synapse_id=data['synapse_id'],
+    #     weight=data['weight'],
+    #     source_id=data['source_id'],
+    #     target_id=data['target_id'],
+    #     position=np.array(data['position']),
+    #     generate_position=False
+    # )   
+
+    # logging.debug("Loading neuron from : {}\ndata:{}".format(location, data))
+    return n

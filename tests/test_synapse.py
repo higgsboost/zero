@@ -23,7 +23,7 @@ class TestSynapse(unittest.TestCase):
         syn_loaded = zero.synapse.synapse_from_file('/tmp/test_syn_4123')
         assert(syn_loaded.get_attributes() == self.syn.get_attributes())
 
-
+    
 
 
 if __name__ == '__main__':

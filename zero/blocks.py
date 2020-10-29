@@ -11,7 +11,7 @@ def get_weights(current_weight):
     weight_shapes = []
     for weights in current_weight:
         try:
-            w = weights.numpy()
+            w = weights.numpy().astype(np.int8)
             print(w.shape)
 
             temp_weights.extend(list(w.flatten()))
@@ -43,6 +43,50 @@ def set_weight_entire(weights_array, tf_model_array):
     for weights_array, model_ in zip(weights_array, tf_model_array):
         set_weights(weights_array, model_.weights)
 
+
+def set_weights_v2(weight_array_to_set, shape_array):
+    # print('Getting weights',self.neuronBlock)
+    def multiply(input_array):
+        """ Dumb function """
+        # print(input_array)
+        if len(input_array) == 1:
+            return input_array[0], len(input_array)
+        if len(input_array) == 2:
+            return input_array[0] * input_array[1], len(input_array)
+        if len(input_array) == 3:
+            return input_array[0] * input_array[1] * input_array[2], len(input_array)
+
+
+    weight_array_temp = weight_array_to_set
+ 
+    for shape in shape_array:
+        #try:
+        if 1:
+            # w = weights.numpy()
+
+            # shape_list = list(w.shape)
+
+
+           
+            length_weight, shape_dim = multiply(shape)
+            
+            # print("Lenght WEIGHT:{}".format(length_weight))
+
+            w_set = weight_array_temp[0:length_weight]
+
+            w_set_reshape = np.reshape(np.array(w_set), np.array(shape))
+
+            weight_array_temp = weight_array_temp[length_weight:]
+
+            # temp_weights.extend(list(w.flatten()))
+            # print(list(w.shape))
+            
+            #print('w_set_reshape : {}'.format(w_set_reshape.shape))
+
+            weights.assign(w_set_reshape)
+        #except Exception as e:
+        #    logging.warning("Set weights failed because", e)
+    # print('Len weights:',len(weight_array))
 
 def set_weights(weight_array_to_set, previous_weight):
     # print('Getting weights',self.neuronBlock)
