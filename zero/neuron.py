@@ -335,7 +335,6 @@ def neuron_from_file(location):
     weights = data['neuron_weights']
     weights_shapes = data['neuron_weights_shapes']
 
-
     data_array = list(range(0, weights_shapes[0][0]))
     input = tf.constant(
             data_array, shape=(1, len(data_array)), dtype=tf.float32

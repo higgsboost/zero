@@ -208,7 +208,7 @@ class brain:
 
             for key, val in sourceN_.getFieldDict().items():
          
-                n_.setField(key, result_)
+                n_.setField(key, float(result_))
 
     def findClosestPoint(self):
         # for each synapse find and move that point to the clo sest neuron (not parent)
