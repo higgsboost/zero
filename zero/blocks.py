@@ -11,7 +11,7 @@ def get_weights(current_weight):
     weight_shapes = []
     for weights in current_weight:
         try:
-            w = weights.numpy().astype(np.int8)
+            w = weights.numpy().astype(np.float)
             print(w.shape)
 
             temp_weights.extend(list(w.flatten()))
@@ -44,7 +44,7 @@ def set_weight_entire(weights_array, tf_model_array):
         set_weights(weights_array, model_.weights)
 
 
-def set_weights_v2(weight_array_to_set, shape_array):
+def set_weights_v2(weight_array_to_set, weights, shape_array):
     # print('Getting weights',self.neuronBlock)
     def multiply(input_array):
         """ Dumb function """
@@ -58,8 +58,8 @@ def set_weights_v2(weight_array_to_set, shape_array):
 
 
     weight_array_temp = weight_array_to_set
- 
-    for shape in shape_array:
+    offset = 0
+    for shape, weight in zip(shape_array, weight_array_to_set):
         #try:
         if 1:
             # w = weights.numpy()
@@ -72,7 +72,7 @@ def set_weights_v2(weight_array_to_set, shape_array):
             
             # print("Lenght WEIGHT:{}".format(length_weight))
 
-            w_set = weight_array_temp[0:length_weight]
+            w_set = weights[offset:offset+length_weight]
 
             w_set_reshape = np.reshape(np.array(w_set), np.array(shape))
 
@@ -82,8 +82,10 @@ def set_weights_v2(weight_array_to_set, shape_array):
             # print(list(w.shape))
             
             #print('w_set_reshape : {}'.format(w_set_reshape.shape))
-
-            weights.assign(w_set_reshape)
+            
+            weight.assign(w_set_reshape)
+            offset = length_weight
+            
         #except Exception as e:
         #    logging.warning("Set weights failed because", e)
     # print('Len weights:',len(weight_array))
@@ -284,8 +286,7 @@ class neuronBlock(tf.keras.layers.Layer):
         super(neuronBlock, self).__init__()
 
         self.linear = tf.keras.layers.Dense(
-            3
-        )  # ,kernel_initializer='RandomNormal', bias_initializer=tf.keras.initializers.constant(1.0))#Linear(8)
+            3  , kernel_initializer='RandomNormal', bias_initializer=tf.keras.initializers.constant(1.0))#Linear(8)
         self.linear1 = tf.keras.layers.Dense(
             3
         )  # ,

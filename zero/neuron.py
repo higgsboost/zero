@@ -119,12 +119,14 @@ class neuron:
 
             self.input_synapse_array = []
         else:
-            pass # TODO
+            self.input_synapse_array = []
 
-        if loading_from_file is False:
-            self.neuronBlock = neuronBlock()
-        else:
-            pass
+        # if loading_from_file is False:
+        #     self.neuronBlock = neuronBlock()
+        # else:
+        #     pass
+
+        self.neuronBlock = neuronBlock()
 
         self.modifierBlock = modifierBlock()
         self.prev_tf_input = None
@@ -200,6 +202,9 @@ class neuron:
 
         return string_
 
+    def set_neuron_block(self):
+        self.neuronBlock = neuronBlock()
+
     # gets entire field dict
     def getFieldDict(self):
         return self.fields
@@ -274,20 +279,20 @@ class neuron:
             "synapse_array": [s.get_attributes() for s in self.synapse_array],
             "input_synapse_array": [s.get_attributes() for s in self.input_synapse_array],
             "neuron_weights": weights,
-            "neuron_shapes": shapes,
+            "neuron_weights_shapes": shapes,
             "firing_value": self.firing_value
 
             
         }
 
         
-        #import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
 
         
         return attributes
     def save(self, location):
         data = self.get_attributes()
-        print(data)
+        # print(data)
         with open(location, 'w') as f:
             json.dump(data, f)
 
@@ -325,14 +330,40 @@ def neuron_from_file(location):
     _ = [n.append_input_synapse_array(s) for s in input_synapse_array]
     _ = [n.append_synapse_array(s) for s in synapse_array]
 
-    # load weights
+    # load weights for block
+
+    weights = data['neuron_weights']
+    weights_shapes = data['neuron_weights_shapes']
+
+    print('weights : {}'.format(weights))
+    print('weights shapes : {} '.format(weights_shapes))
+
+    
+
+
+    #n.set_neuron_block()
+
+    data_array = [1,2,3,4]
+    input = tf.constant(
+            data_array, shape=(1, len(data_array)), dtype=tf.float32
+        )
+
+    n.apply_neuron_block(input).numpy()
+
+    print(' neuron weights', n.neuronBlock.weights)
+    set_weights_v2(n.neuronBlock.weights, weights, weights_shapes)
+
+    print(' neuron weights', n.neuronBlock.weights)
+    #import pdb; pdb.set_trace()
+    
+    #self.neuronBlock
 
 
         # loading_synapse_from_file=False,
         # loading_input_synapse_from_file=False,
         # loading_neu
 
-    
+    print('----------')
 
     
     

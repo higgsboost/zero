@@ -34,27 +34,19 @@ class TestNeuron(unittest.TestCase):
 
         result_ = neuron.apply_neuron_block(input).numpy()
         self.result = result_
-        
+        #import pdb; pdb.set_trace()
+
+        print('original weights : ', neuron.neuronBlock.weights)
 
         neuron.save('/tmp/test_neuron.json')
+
+        self.original_neuron = neuron
 
     def test_neuron(self):
 
         neuron = zero.neuron.neuron_from_file('/tmp/test_neuron.json')
-        # neuron = zero.neuron.neuron(
-        #     numSynapse=100,
-        #     nucleus_id=1,
-        #     neuron_radius=1,
-        #     synapse_radius=1,
-        #     neuronFields={'a':0},
-        #     synapseFields={'a':0},
-        # )
 
-        # print('-----', neuron)
-
-        #import pdb; pdb.set_trace()
-
-
+        assert(self.original_neuron.get_attributes() == neuron.get_attributes())
 
 
 if __name__ == '__main__':
