@@ -280,67 +280,76 @@ class brain:
 
 
 
+    def get_attributes(self):
+        # self.neuron_array 
+
+        # self.brainId = brainId
+
+        # # Fields for neurons
+        # self.neuronFields = neuronFields.copy()
+        # # Fields for synapses
+        # self.synapseFields = synapseFields.copy()
+
+        # # This array maps neuron ids to indices in 'neuron_array'
+        # self.neuronMapper = dict()
+
+        # # generation radius
+        # self.neuron_radius = neuron_radius
+
+        # self.synapse_radius = synapse_radius
+
+        # self.neuron_index_offset = neuron_index_offset
+
+
+        # self.num_neuron = num_neuron
+        # self.num_synapse = num_synapse
+        # self.block_limits = block_limits
+
+        # self.is_input_block = is_input_block
+        # self.is_output_block = is_output_block
+        # self.is_reward_block = is_reward_block
+
+        # # If synapse is modifiable from the neuron
+        # self.modifiable = modifiable
+
+        # # todo figure out logic
+        # # self.modifierBlock = modifierBlock()
+
+        # # generate neuron
+        # logging.debug("Generating neurons ...")
+        an = [n.get_attributes() for n in self.neuron_array]
+
+        import pdb; pdb.set_trace()
+
+        a = self.neuron_array[0].get_attributes()
+        print(a)
+        import pdb; pdb.set_trace()
+        attributes = {
+            "neuron_array": a,
+            # "brainId": self.brainId,
+            # "neuronFields": self.neuronFields,
+            # "synapseFields": self.synapseFields,
+            # "neuronMapper": self.neuronMapper,
+            # "neuron_radius": self.neuron_radius,
+            # "synapse_radius": self.synapse_radius,
+            # "neuron_index_offset": self.neuron_index_offset,
+            # "num_neuron": self.num_neuron,
+            # "num_synapse": self.num_synapse,
+            # "block_limits": self.block_limits,
+
+            # "is_input_block": self.is_input_block,
+            # "is_output_block": self.is_output_block,
+            # "is_reward_block": self.is_reward_block,
+            # "modifiable": self.modifiable,
+
+        }
+
+        return attributes
+
         
 
-    def writeToFile(self, dir_="", time=None):
-
-        name_array = []
-
-        for key, val in self.neuronFields.items():
-            name_array.append(key)
-
-        if time is None:
-            print(
-                "\nWriting brain {} to file {}".format(
-                    self.brainId,
-                    os.path.join(dir_, "{}.exnode".format(str(self.brainId))),
-                )
-            )
-            self.cmissIO = opencmissIO(
-                os.path.join(dir_, "{}.exnode".format(str(self.brainId))), name_array
-            )
-        else:
-            print(
-                "\nWriting brain {} to file for time {} ...".format(self.brainId, time)
-            )
-            self.cmissIO = opencmissIO(
-                os.path.join(
-                    dir_, "{}_{}.exnode".format(str(self.brainId), str(int(time)))
-                ),
-                name_array,
-            )
-        for n_ in self.neuron_array:
-            self.cmissIO.addNode(
-                n_.getId(),
-                "{} {} \n{} {} \n{} {} \n{}".format(
-                    n_.getPosition()[0],
-                    0,  # 0*self.radius*random.uniform(-1, 1),
-                    n_.getPosition()[1],
-                    0,  # *self.radius*random.uniform(-1, 1),
-                    n_.getPosition()[2],
-                    0,  # *self.radius*random.uniform(-1, 1),
-                    n_.returnFieldString(),
-                ),
-            )
-            synapse_array = n_.getSynapse()
-            for j, synapse_ in enumerate(synapse_array):
-                synapse_id = synapse_.getId()
-                # ds1 = distanceTwoNodes(n_.getPosition(),synapse_.getPosition())
-
-                self.cmissIO.addNode(
-                    synapse_id,
-                    "{} {} \n{} {} \n{} {} \n{}".format(
-                        synapse_.getPosition()[0],
-                        synapse_.getds1()[0],  # Multiply by random for nice graphics
-                        synapse_.getPosition()[1],
-                        synapse_.getds1()[1],
-                        synapse_.getPosition()[2],
-                        synapse_.getds1()[2],
-                        synapse_.returnFieldString(),
-                    ),
-                )
-
-                self.cmissIO.addElement(synapse_id, n_.getId(), synapse_id)
-                # self.cmissIO.addElement(synapse_id,n_.getId(),synapse_.getTargetNucleusId())
-        self.cmissIO.writeToFile()
-
+    def save(self, location):
+        data = self.get_attributes()
+        # print(data)
+        with open(location, 'w') as f:
+            json.dump(data, f)

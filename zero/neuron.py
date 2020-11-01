@@ -338,9 +338,6 @@ def neuron_from_file(location):
     print('weights : {}'.format(weights))
     print('weights shapes : {} '.format(weights_shapes))
 
-    
-
-
     #n.set_neuron_block()
 
     data_array = [1,2,3,4]
@@ -354,27 +351,7 @@ def neuron_from_file(location):
     set_weights_v2(n.neuronBlock.weights, weights, weights_shapes)
 
     print(' neuron weights', n.neuronBlock.weights)
-    #import pdb; pdb.set_trace()
     
-    #self.neuronBlock
-
-
-        # loading_synapse_from_file=False,
-        # loading_input_synapse_from_file=False,
-        # loading_neu
-
-    print('----------')
-
+    print('----------')  
     
-    
-    # temp = synapse(
-    #     synapse_id=data['synapse_id'],
-    #     weight=data['weight'],
-    #     source_id=data['source_id'],
-    #     target_id=data['target_id'],
-    #     position=np.array(data['position']),
-    #     generate_position=False
-    # )   
-
-    # logging.debug("Loading neuron from : {}\ndata:{}".format(location, data))
     return n

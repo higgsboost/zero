@@ -29,6 +29,8 @@ class TestBrain(unittest.TestCase):
         b1.one_step()
         #import pdb; pdb.set_trace()
 
+        b1.save('/tmp/test_brain')
+
 
 
 
