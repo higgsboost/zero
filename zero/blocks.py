@@ -315,8 +315,9 @@ class neuronBlock(tf.keras.layers.Layer):
         # )  
         #return tf.cond(tf.less(tf.math.reduce_sum(x), tf.constant(0.9)), f1, f2 )
         #x = self.out(x)
-        #x = tf.nn.tanh(x)
-        return tf.math.reduce_sum(x) #tf.nn.sigmoid(tf.math.reduce_sum(x))
+        x = tf.math.reduce_sum(tf.nn.tanh(x))
+        return x
+        #return tf.math.reduce_sum(x) #tf.nn.sigmoid(tf.math.reduce_sum(x))
 
 
 @tf.function

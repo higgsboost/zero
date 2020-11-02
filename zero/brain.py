@@ -70,7 +70,8 @@ class brain:
 
         # This array maps neuron ids to indices in 'neuron_array'
         
-        self.neuronMapper = dict()
+        if generate_neurons:
+            self.neuronMapper = dict()
 
         # generation radius
         self.neuron_radius = neuron_radius
@@ -207,6 +208,7 @@ class brain:
             # self.prev_in = in_syn_values
 
             result_ = n_.apply_neuron_block(input_tf).numpy()
+            
 
 
             mutate_neuron_block = False #TODO ARGS
@@ -216,7 +218,7 @@ class brain:
             # print(n_.apply_neuron_block(input_tf).numpy()[0])
 
             for key, val in sourceN_.getFieldDict().items():
-         
+              
                 n_.setField(key, float(result_))
 
     def findClosestPoint(self):
@@ -305,9 +307,11 @@ class brain:
 
 
 def brain_from_file(location):
+
     with open(location, 'r') as f:
         data = json.load(f)
-
+    
+    # slowest
     neuron_array = [neuron_from_json(d) for d in data['neuron_array']]
 
     b = brain(
@@ -331,10 +335,12 @@ def brain_from_file(location):
     b.modifiable = data['modifiable']
     mapper = data['neuronMapper']
 
-    for k in mapper.keys():
-        mapper[int(k)] = mapper.pop(k)
+    
+    mapper= {int(k):int(v) for k,v in mapper.items()}
+    b.set_neuron_mapper(mapper)
 
-    b.set_neuron_mapper(data['neuronMapper'])
+    # for k in b.neuronMapper:
+    #     b.neuronMapper[int(k)] = b.neuronMapper.pop(k)
 
     return b
 

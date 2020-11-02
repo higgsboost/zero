@@ -10,3 +10,25 @@ def add_to_weights(n, original_weights, weight_adds, shape_array):
 
     set_weights_v2(n.neuronBlock.weights,  new_weights, shape_array)
 
+def add_noise_to_brain(b, r):
+    """ Add noise with min=-r and max=r """
+    num_neuron = len(b.getNeuronArray()) # RUN ALL
+
+    for n_id in range(num_neuron):
+
+        n = b.getNeuronArray()[n_id]
+
+        w, s, l = n.getWeights()   
+
+        #total_length = sum([t[0]*t[1] for t in s])
+        weight_to_add = np.random.uniform(-r, r, l) 
+        
+        add_to_weights(n, w, weight_to_add, s)
+
+        
+
+def generate_population():
+    pass
+
+    
+

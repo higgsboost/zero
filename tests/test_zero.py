@@ -13,8 +13,8 @@ class TestZero(unittest.TestCase):
     def setUpClass(self):
         
         b1 = zero.brain.brain(
-            num_neuron=50,
-            num_synapse=20,
+            num_neuron=20,
+            num_synapse=5,
             neuronFields={'a':0.0,'b':0.0},
             synapseFields={'a':0.0,'b':0.0},
             neuron_radius = 3,
@@ -24,16 +24,19 @@ class TestZero(unittest.TestCase):
             )
         b1.findClosestPoint()
         b1.one_step()
+
+        b1.getNeuronArray()[0].is_output=True
+        b1.getNeuronArray()[2].is_input=True
         #import pdb; pdb.set_trace()
 
         b1.save('/tmp/test_zero')
+        b1.save('/tmp/test_zero_get_to_the_point')
 
         self.original_brain = b1
 
     def test_mutate_individual_neuron(self):
 
         b = zero.brain.brain_from_file('/tmp/test_zero')
-
         
         num_neuron = len(b.getNeuronArray()) # RUN ALL
 
@@ -54,9 +57,86 @@ class TestZero(unittest.TestCase):
             assert(np.mean(np.array(n.get_attributes()['neuron_weights']) -  actual_weights)<0.0000001)
 
 
+    def test_mutate_brain_with_noise(self):
+        
+        # for i in range(100):
+        #     print(i)
+        b1 = zero.brain.brain_from_file('/tmp/test_zero')
+        b2 = zero.brain.brain_from_file('/tmp/test_zero')
+        zero.zero.add_noise_to_brain(b1, 0)
+
+        assert(b1.get_attributes() == b2.get_attributes())
+
+        zero.zero.add_noise_to_brain(b1, 1)
+
+        assert(b1.get_attributes() != b2.get_attributes())
+
+        
+    def test_get_to_the_point(self):
+
+        b12 = zero.brain.brain_from_file('/tmp/test_zero_get_to_the_point')
+        #b22 = zero.brain.brain_from_file('/tmp/test_zero')
+
+        #assert(b1.get_attributes() == b2.get_attributes())
+
+        #import pdb;pdb.set_trace()
+        #print(b12.neuronMapper)
+
+        def get_pop():
+            pop = []
+            for i in range(2):
+                p = zero.brain.brain_from_file('/tmp/test_zero_get_to_the_point')
+                zero.zero.add_noise_to_brain(p, 0.2)
+                pop.append(p)
+            return pop
+
+        num_steps = 2
+
+        pop = get_pop()
+
+        target = -1
+        while True:
+            diff_array = []
+            for p in pop:
+                for s in range(100000):
+                    p.one_step()
+                    out = p.get_output_values()[0]
+                    
+                    print(out)
+
+                    input_neurons = [n_ for n_ in p.getNeuronArray() if n_.is_input is True]
+                    print(input_neurons)
+                    for input_neuron in input_neurons:
+                        input_neuron.setField("a", np.random.randint(0, 100))
+
+
+                diff_array.append(np.absolute(out-target))
+            print('loss', np.sum(diff_array))
+            pop[np.argmin(diff_array)].save('/tmp/test_zero_get_to_the_point')
+
+            pop = get_pop()
+
+            
+                    
+        # import ray
+        # ray.init()
+
+        # import multiprocessing as mp
+
+        # a = []
+        # for _ in range(1000):
+        #     p = mp.Process(target=zero.brain.brain_from_file, args=('/tmp/test_zero',))
+        #     p.start()
+        #     a.append(p)
+
+        # for p in a:
+        #     p.join()
+        
+
 
 
         
+
 
         
         
