@@ -56,8 +56,9 @@ class brain:
         is_input_block=False,
         is_output_block=False,
         is_reward_block=False,
-        modifiable=True,
+        modifiable=True
     ):
+        
         self.neuron_array = []
 
         self.brainId = brainId
@@ -68,6 +69,7 @@ class brain:
         self.synapseFields = synapseFields.copy()
 
         # This array maps neuron ids to indices in 'neuron_array'
+        
         self.neuronMapper = dict()
 
         # generation radius
@@ -102,6 +104,10 @@ class brain:
     def max_id(self):
         ''' returns maximum id for neuron | synapse '''
         return self.num_neuron * (self.num_synapse + 1) + self.neuron_index_offset
+
+    def set_neuron_mapper(self, mapper):
+        self.neuronMapper = mapper
+        
     def generate_neurons(self):
 
         for i in range(self.num_neuron):
@@ -140,9 +146,12 @@ class brain:
 
                 n.setField('a', value)
 
-        
+    def set_neuron_array(self, neuron_array):
+        self.neuron_array = neuron_array
+
     def one_step_new(self):
         pass
+
 
     def one_step(self):
         # Main guy takes care of one step of t
@@ -260,87 +269,27 @@ class brain:
     def setIsInputIndex(self, index, is_input):
         self.neuron_array[index].setIsInput(is_input)
 
-
     def getNeuronArray(self):
         return self.neuron_array
 
-    # Dumps everything
-    def dump(self):
-        for n_ in self.neuron_array:
-      
-            w = get_weights(n_.neuronBlock.weights)
-            print(w)
-
-            print('-------------')
-
-   
-            for j, synapse_ in enumerate(n_.getSynapse()):
-                synapse_.dump()
-                
-
-
-
     def get_attributes(self):
-        # self.neuron_array 
-
-        # self.brainId = brainId
-
-        # # Fields for neurons
-        # self.neuronFields = neuronFields.copy()
-        # # Fields for synapses
-        # self.synapseFields = synapseFields.copy()
-
-        # # This array maps neuron ids to indices in 'neuron_array'
-        # self.neuronMapper = dict()
-
-        # # generation radius
-        # self.neuron_radius = neuron_radius
-
-        # self.synapse_radius = synapse_radius
-
-        # self.neuron_index_offset = neuron_index_offset
-
-
-        # self.num_neuron = num_neuron
-        # self.num_synapse = num_synapse
-        # self.block_limits = block_limits
-
-        # self.is_input_block = is_input_block
-        # self.is_output_block = is_output_block
-        # self.is_reward_block = is_reward_block
-
-        # # If synapse is modifiable from the neuron
-        # self.modifiable = modifiable
-
-        # # todo figure out logic
-        # # self.modifierBlock = modifierBlock()
-
-        # # generate neuron
-        # logging.debug("Generating neurons ...")
-        an = [n.get_attributes() for n in self.neuron_array]
-
-        import pdb; pdb.set_trace()
-
-        a = self.neuron_array[0].get_attributes()
-        print(a)
-        import pdb; pdb.set_trace()
+        
         attributes = {
-            "neuron_array": a,
-            # "brainId": self.brainId,
-            # "neuronFields": self.neuronFields,
-            # "synapseFields": self.synapseFields,
-            # "neuronMapper": self.neuronMapper,
-            # "neuron_radius": self.neuron_radius,
-            # "synapse_radius": self.synapse_radius,
-            # "neuron_index_offset": self.neuron_index_offset,
-            # "num_neuron": self.num_neuron,
-            # "num_synapse": self.num_synapse,
-            # "block_limits": self.block_limits,
-
-            # "is_input_block": self.is_input_block,
-            # "is_output_block": self.is_output_block,
-            # "is_reward_block": self.is_reward_block,
-            # "modifiable": self.modifiable,
+            "neuron_array": [n.get_attributes() for n in self.neuron_array],
+            "brainId": self.brainId,
+            "neuronFields": self.neuronFields,
+            "synapseFields": self.synapseFields,
+            "neuronMapper": self.neuronMapper,
+            "neuron_radius": self.neuron_radius,
+            "synapse_radius": self.synapse_radius,
+            "neuron_index_offset": self.neuron_index_offset,
+            "num_neuron": self.num_neuron,
+            "num_synapse": self.num_synapse,
+            "block_limits": self.block_limits,
+            "is_input_block": self.is_input_block,
+            "is_output_block": self.is_output_block,
+            "is_reward_block": self.is_reward_block,
+            "modifiable": self.modifiable,
 
         }
 
@@ -353,3 +302,44 @@ class brain:
         # print(data)
         with open(location, 'w') as f:
             json.dump(data, f)
+
+
+def brain_from_file(location):
+    with open(location, 'r') as f:
+        data = json.load(f)
+
+    neuron_array = [neuron_from_json(d) for d in data['neuron_array']]
+
+    b = brain(
+        num_neuron=data['num_neuron'],
+        num_synapse=data['num_synapse'],
+        neuronFields=data['neuronFields'],
+        synapseFields=data['synapseFields'],
+        neuron_radius=data['neuron_radius'],
+        synapse_radius=data['synapse_radius'],
+        brainId=data['brainId'],
+        block_limits=data['block_limits'],
+        neuron_index_offset=data['neuron_index_offset'],
+        generate_neurons=False,
+        is_input_block=data['is_input_block'],
+        is_output_block=data['is_output_block'],
+        is_reward_block=data['is_reward_block'],
+        modifiable=data['modifiable'],
+    )
+
+    b.set_neuron_array(neuron_array)
+    b.modifiable = data['modifiable']
+    mapper = data['neuronMapper']
+
+    for k in mapper.keys():
+        mapper[int(k)] = mapper.pop(k)
+
+    b.set_neuron_mapper(data['neuronMapper'])
+
+    return b
+
+
+
+
+
+    

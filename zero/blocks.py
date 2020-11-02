@@ -12,7 +12,6 @@ def get_weights(current_weight):
     for weights in current_weight:
         try:
             w = weights.numpy().astype(np.float)
-            print(w.shape)
 
             temp_weights.extend(list(w.flatten()))
 
@@ -43,18 +42,20 @@ def set_weight_entire(weights_array, tf_model_array):
     for weights_array, model_ in zip(weights_array, tf_model_array):
         set_weights(weights_array, model_.weights)
 
+def shape_length(input_array):
+    """ Dumb function to get length of tuple """
+    # print(input_array)
+    if len(input_array) == 1:
+        return input_array[0], len(input_array)
+    if len(input_array) == 2:
+        return input_array[0] * input_array[1], len(input_array)
+    if len(input_array) == 3:
+        return input_array[0] * input_array[1] * input_array[2], len(input_array)
+
 
 def set_weights_v2(weight_array_to_set, weights, shape_array):
     # print('Getting weights',self.neuronBlock)
-    def multiply(input_array):
-        """ Dumb function """
-        # print(input_array)
-        if len(input_array) == 1:
-            return input_array[0], len(input_array)
-        if len(input_array) == 2:
-            return input_array[0] * input_array[1], len(input_array)
-        if len(input_array) == 3:
-            return input_array[0] * input_array[1] * input_array[2], len(input_array)
+    
 
 
     weight_array_temp = weight_array_to_set
@@ -68,7 +69,7 @@ def set_weights_v2(weight_array_to_set, weights, shape_array):
 
 
            
-            length_weight, shape_dim = multiply(shape)
+            length_weight, shape_dim = shape_length(shape)
             
             # print("Lenght WEIGHT:{}".format(length_weight))
 
@@ -286,7 +287,7 @@ class neuronBlock(tf.keras.layers.Layer):
         super(neuronBlock, self).__init__()
 
         self.linear = tf.keras.layers.Dense(
-            3  , kernel_initializer='RandomNormal', bias_initializer=tf.keras.initializers.constant(1.0))#Linear(8)
+            3  , kernel_initializer='RandomNormal', bias_initializer='RandomNormal')#Linear(8)
         self.linear1 = tf.keras.layers.Dense(
             3
         )  # ,

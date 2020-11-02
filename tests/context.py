@@ -6,3 +6,4 @@ sys.path.insert(0, os.path.abspath(
 import zero.synapse
 import zero.neuron
 import zero.brain
+import zero.zero

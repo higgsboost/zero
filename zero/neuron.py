@@ -256,6 +256,19 @@ class neuron:
     def setFiringValue(self, firing_value_):
         self.firing_value = firing_value_
 
+    def getWeights(self):
+        """ wrapper around get_weights from .blocks """
+        w,s =get_weights(self.neuronBlock.weights)
+
+        total_length = 0
+
+        for s_ in s:
+            l,_ = shape_length(s_)
+            total_length += l
+        
+        return w,s,total_length
+
+
     def get_attributes(self):
 
         weights, shapes = get_weights(self.neuronBlock.weights)
@@ -298,13 +311,7 @@ class neuron:
 
 
 
-
-
-
-def neuron_from_file(location):
-    with open(location, 'r') as f:
-        data = json.load(f)
-
+def neuron_from_json(data):
     synapse_array = [synapse_from_json(d) for d in data['synapse_array']]
     input_synapse_array = [synapse_from_json(d) for d in data['input_synapse_array']]
 
@@ -343,5 +350,14 @@ def neuron_from_file(location):
     n.apply_neuron_block(input).numpy()
     
     set_weights_v2(n.neuronBlock.weights, weights, weights_shapes)
+
+    return n
+
+
+def neuron_from_file(location):
+    with open(location, 'r') as f:
+        data = json.load(f)
+
+    n = neuron_from_json(data)
     
     return n
