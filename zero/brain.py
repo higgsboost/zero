@@ -113,7 +113,7 @@ class brain:
 
         for i in range(self.num_neuron):
 
-            neuron_id = i * (self.num_synapse + 1) + self.neuron_index_offset
+            neuron_id = i * (self.num_synapse + 2) + self.neuron_index_offset
             n_ = neuron(
                 self.num_synapse,
                 neuron_id,
@@ -175,11 +175,13 @@ class brain:
 
         neuron_array = self.getNeuronArray()
         #logging.info('Modifiable : {}'.format(self.modifiable))
-        for n_ in neuron_array:
+        for i, n_ in enumerate(neuron_array):
 
             if n_.is_input:
                 # If neuron is input then don't allow other inputs.
                 logging.debug('Skipping because it is an input : {}'.format(n_.getId()))
+
+                #import pdb; pdb.set_trace()
                 continue
 
             # Loop through input synapse
@@ -196,7 +198,7 @@ class brain:
 
                 #   j+=1
 
-            # print('insyn values', in_syn_values)
+            #print('insyn values', in_syn_values)
             # print(in_syn_values)
 
             input_tf = tf.constant(
@@ -206,7 +208,8 @@ class brain:
             # print('Prev in ', self.prev_in)
             # print('Cur in ', in_syn_values)
             # self.prev_in = in_syn_values
-
+            # if i == 0:
+            
             result_ = n_.apply_neuron_block(input_tf).numpy()
             
 
@@ -218,8 +221,12 @@ class brain:
             # print(n_.apply_neuron_block(input_tf).numpy()[0])
 
             for key, val in sourceN_.getFieldDict().items():
-              
+                
+                #n_.setField(key, float(result_))
+                
                 n_.setField(key, float(result_))
+
+            #if n_.is_output: import pdb; pdb.set_trace()
 
     def findClosestPoint(self):
         # for each synapse find and move that point to the clo sest neuron (not parent)

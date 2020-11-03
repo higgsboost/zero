@@ -111,6 +111,10 @@ class neuron:
                         synapseFields=self.synapseFields
                     )
                 )
+
+            
+            
+
         else:
             pass # TODO
         
@@ -120,6 +124,20 @@ class neuron:
             self.input_synapse_array = []
         else:
             self.input_synapse_array = []
+
+
+        if self.is_input:
+            self.input_synapse_array.append(
+                synapse(
+                    synapse_id=self.nucleus_id + numSynapse + 1,
+                    weight=1,
+                    source_id=self.nucleus_id,
+                    target_id=None,
+                    position=self.position,
+                    radius=self.synapse_radius,
+                    synapseFields=self.synapseFields
+                )
+            ) 
 
         # if loading_from_file is False:
         #     self.neuronBlock = neuronBlock()
