@@ -17,6 +17,7 @@ import pickle
 import os
 import sys
 
+import copy
 
 from .synapse import *
 from .blocks import *
@@ -126,18 +127,18 @@ class neuron:
             self.input_synapse_array = []
 
 
-        if self.is_input:
-            self.input_synapse_array.append(
-                synapse(
-                    synapse_id=self.nucleus_id + numSynapse + 1,
-                    weight=1,
-                    source_id=self.nucleus_id,
-                    target_id=None,
-                    position=self.position,
-                    radius=self.synapse_radius,
-                    synapseFields=self.synapseFields
-                )
-            ) 
+        # if self.is_input:
+        #     self.input_synapse_array.append(
+        #         synapse(
+        #             synapse_id=self.nucleus_id + numSynapse + 1,
+        #             weight=1,
+        #             source_id=self.nucleus_id,
+        #             target_id=None,
+        #             position=self.position,
+        #             radius=self.synapse_radius,
+        #             synapseFields=self.synapseFields
+        #         )
+        #     ) 
 
         # if loading_from_file is False:
         #     self.neuronBlock = neuronBlock()
@@ -200,6 +201,9 @@ class neuron:
 
     def get_input_synpase_array(self):
         return self.input_synapse_array
+
+    def get_input_synpase_ids(self):
+        return [s.synapse_id for s in self.input_synapse_array]
 
     def getPosition(self):
         return self.position
@@ -330,10 +334,12 @@ class neuron:
 
 
 def neuron_from_json(data):
-    synapse_array = [synapse_from_json(d) for d in data['synapse_array']]
+    synapse_array = [copy.deepcopy(synapse_from_json(d)) for d in data['synapse_array']]
     input_synapse_array = [synapse_from_json(d) for d in data['input_synapse_array']]
 
+    input_synapse_array_id = [synapse_from_json(d).synapse_id for d in data['input_synapse_array']]
 
+    # import pdb; pdb.set_trace()
     n = neuron(
         numSynapse=data['numSynapse'],
         nucleus_id=data['nucleus_id'],

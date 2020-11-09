@@ -46,7 +46,10 @@ class TestNeuron(unittest.TestCase):
 
         neuron = zero.neuron.neuron_from_file('/tmp/test_neuron.json')
 
-        assert(self.original_neuron.get_attributes() == neuron.get_attributes())
+        for k in self.original_neuron.get_attributes().keys():
+            print('testking : {}'.format(k))
+            if k == 'neuron_weights': import pdb; pdb.set_trace()
+            assert(self.original_neuron.get_attributes()[k] == neuron.get_attributes()[k])
 
 
 if __name__ == '__main__':

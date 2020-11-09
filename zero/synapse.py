@@ -28,7 +28,7 @@ import sys
 
 class synapse:
     def __init__(
-        self, synapse_id, weight, source_id, target_id, position, radius=1.0, synapseFields={'default':0}, generate_position=True
+        self, synapse_id, weight, source_id, target_id, position, radius=1.0, synapseFields={'a':0}, generate_position=True
     ):
 
         self.synapse_id = synapse_id
