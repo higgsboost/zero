@@ -11,9 +11,9 @@ class TestZero(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        
+        num_neuron = 40
         b1 = zero.brain.brain(
-            num_neuron=20,
+            num_neuron=num_neuron,
             num_synapse=15,
             neuronFields={'a':0.0,'b':0.0},
             synapseFields={'a':0.0,'b':0.0},
@@ -28,16 +28,15 @@ class TestZero(unittest.TestCase):
         # b1.one_step()
         # b1.one_step()
 
-        b1.getNeuronArray()[17].is_output=True
-        b1.getNeuronArray()[18].is_output=True
-        b1.getNeuronArray()[19].is_output=True
-        b1.getNeuronArray()[16].is_output=True
+        num_inputs = 10
+        self.num_inputs = num_inputs
+        for i in range(0, num_inputs):
+            b1.getNeuronArray()[i].is_output=True
 
 
-        b1.getNeuronArray()[0].is_input=True
-        b1.getNeuronArray()[1].is_input=True
-        b1.getNeuronArray()[2].is_input=True
-        b1.getNeuronArray()[3].is_input=True
+        for i in range(num_neuron-num_inputs, num_neuron):
+            b1.getNeuronArray()[i].is_input=True
+
         #b1.getNeuronArray()[3].is_input=True
         #import pdb; pdb.set_trace()
 
@@ -101,41 +100,42 @@ class TestZero(unittest.TestCase):
 
         def get_pop():
             pop = []
-            for i in range(50):
+            for i in range(10):
                 p = zero.brain.brain_from_file('/tmp/test_zero_get_to_the_point')
                 zero.zero.add_noise_to_brain(p, 0.5)
                 pop.append(p)
             return pop
 
-        num_steps = 2
+        num_steps = 4
 
         pop = get_pop()
 
         target = 0.8
 
-        input_size = 4
-        while True:
+        input_size = self.num_inputs
+        for _ in range(2):
             diff_array = []
             for p in pop:
                 diff_array_pop = []
-                for i in range(10):
+                for i in range(5):
                     input_array = [0.0] *input_size
 
                     on_index = np.random.randint(0, input_size)
                     input_array[int(on_index)] = 2.0
                     
-                    if 1:
+                    
+                    for s in range(num_steps):
+                        if 1:
 
-                        input_neurons = [n_ for n_ in p.getNeuronArray() if n_.is_input is True]
-                        print(input_neurons)
+                            input_neurons = [n_ for n_ in p.getNeuronArray() if n_.is_input is True]
+                    
 
-                        for v_i, v in enumerate(input_array):
+                            for v_i, v in enumerate(input_array):
 
-                            input_neurons[v_i].setField("a", v)
+                                input_neurons[v_i].setField("a", v)
                
                         
-                        print('-fire')
-                    for s in range(1):
+            
                         
                         p.one_step()
                         out = p.get_output_values()

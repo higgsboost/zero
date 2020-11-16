@@ -48,7 +48,7 @@ class TestNeuron(unittest.TestCase):
 
         for k in self.original_neuron.get_attributes().keys():
             print('testking : {}'.format(k))
-            if k == 'neuron_weights': import pdb; pdb.set_trace()
+            #if k == 'neuron_weights': import pdb; pdb.set_trace()
             assert(self.original_neuron.get_attributes()[k] == neuron.get_attributes()[k])
 
 
