@@ -287,7 +287,7 @@ class neuronBlock(tf.keras.layers.Layer):
         super(neuronBlock, self).__init__()
 
         self.linear = tf.keras.layers.Dense(
-            5  , kernel_initializer='RandomNormal', bias_initializer='RandomNormal')#Linear(8)
+            15  , kernel_initializer='RandomNormal', bias_initializer='RandomNormal')#Linear(8)
         self.linear1 = tf.keras.layers.Dense(
             5, kernel_initializer='RandomNormal', bias_initializer='RandomNormal')#Linear(8)
 
@@ -302,7 +302,8 @@ class neuronBlock(tf.keras.layers.Layer):
     def call(self, inputs):
         x = self.linear(inputs)
         x = tf.nn.tanh(x)
-        x = self.linear1(x)
+        #x = self.linear1(x)
+        #x = tf.nn.tanh(x)
         def f1():
             return tf.math.reduce_sum(x)
             return tf.constant(1.0)

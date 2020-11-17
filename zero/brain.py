@@ -159,8 +159,12 @@ class brain:
 
         s_array = self.returnSynapses()
 
+        syn_dict = dict()
+
+        for s in s_array:
+            syn_dict[s.synapse_id] = s
         # Loop through all synapses in brain
-        for s_ in s_array:
+        for i, s_ in enumerate(s_array):
             # print(s_.getSourceNucleusId())
             #import pdb; pdb.set_trace()
             sourceN_ = self.getNeuron(s_.getSourceNucleusId())
@@ -170,10 +174,20 @@ class brain:
 
             # Loop through all source neurons and put value in synapse
             for key, val in sourceN_.getFieldDict().items():
+                
                 f_ = sourceN_.getField(key)
+                #print('syn id : {} source_n {}'.format(s_.synapse_id, sourceN_.nucleus_id), val, f_)
                 s_.setField(key, f_)
 
+                
+                #s_array[i] = s_
+
         neuron_array = self.getNeuronArray()
+
+        # neuron_values = [n.getField('a') for n in neuron_array]
+        # syn_values = [s.getField('a') for s in s_array]
+
+        
         #logging.info('Modifiable : {}'.format(self.modifiable))
         for i, n_ in enumerate(neuron_array):
 
@@ -185,7 +199,8 @@ class brain:
                 continue
 
             # Loop through input synapse
-            in_syn = n_.get_input_synpase_array()
+            in_syn_id = n_.get_input_synpase_ids()
+            in_syn = [ syn_dict[synapse_id] for synapse_id in in_syn_id]
             in_syn_values = []
             for syn_ in in_syn:
                 in_syn_values.append(syn_.getField("a"))
@@ -226,7 +241,8 @@ class brain:
                 
                 n_.setField(key, float(result_))
 
-            #if n_.is_output: import pdb; pdb.set_trace()
+            #if n_.is_input: 
+            
 
     def findClosestPoint(self):
         # for each synapse find and move that point to the clo sest neuron (not parent)
@@ -321,6 +337,13 @@ def brain_from_file(location):
     # slowest
     neuron_array = [neuron_from_json(d) for d in data['neuron_array']]
 
+    # synapse array classes are recreated so need to make synapse array correspond with input syn array
+    
+
+
+ 
+            
+
     b = brain(
         num_neuron=data['num_neuron'],
         num_synapse=data['num_synapse'],
@@ -346,6 +369,26 @@ def brain_from_file(location):
     mapper= {int(k):int(v) for k,v in mapper.items()}
     b.set_neuron_mapper(mapper)
 
+
+
+    # synapses = b.returnSynapses()                
+    # for n in b.getNeuronArray():
+    #     input_synapses = n.get_input_synpase_array()
+
+    #     new_input_syn = []
+    #     for s_in in input_synapses:
+    #         for s in synapses:
+                
+    #             if s_in.synapse_id == s.synapse_id:
+    #                 # n.input_synapse_array.remove(s_in)
+    #                 # n.input_synapse_array.append(s)
+
+    #                 new_input_syn.append(s)
+    #                 print(s_in.synapse_id, s.synapse_id)
+
+    #                 #import pdb; pdb.set_trace()
+    
+    #     n.input_synapse_array = new_input_syn
     # for k in b.neuronMapper:
     #     b.neuronMapper[int(k)] = b.neuronMapper.pop(k)
 

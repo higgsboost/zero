@@ -123,9 +123,9 @@ tensorflow-estimator==2.1.0
 termcolor==1.1.0
 terminado==0.8.2
 testpath==0.4.4
-tf-estimator-nightly==1.14.0.dev2019080601
-tf-nightly==2.4.0.dev20200822
-tfa-nightly==0.9.0.dev20200318172013
+tf-estimator-nightly
+tf-nightly
+tfa-nightly
 tornado==6.0.3
 tqdm==4.38.0
 traitlets==4.3.3
