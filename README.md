@@ -1,2 +1,1 @@
-
-python -m unittest
+[![Build Status](https://travis-ci.org/higgsboost/zero.svg?branch=main)](https://travis-ci.org/higgsboost/zero)
