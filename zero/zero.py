@@ -16,7 +16,7 @@ def add_noise_to_brain(b, r):
 
     for n_id in range(num_neuron):
         
-        #if np.random.randint(0, 100) > 50: continue
+        if np.random.randint(0, 100) > 50: continue
         n = b.getNeuronArray()[n_id]
 
         w, s, l = n.getWeights()   

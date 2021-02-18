@@ -191,12 +191,12 @@ class brain:
         #logging.info('Modifiable : {}'.format(self.modifiable))
         for i, n_ in enumerate(neuron_array):
 
-            if n_.is_input:
-                # If neuron is input then don't allow other inputs.
-                logging.debug('Skipping because it is an input : {}'.format(n_.getId()))
+            # if n_.is_input:
+            #     # If neuron is input then don't allow other inputs.
+            #     logging.debug('Skipping because it is an input : {}'.format(n_.getId()))
 
-                #import pdb; pdb.set_trace()
-                continue
+            #     #import pdb; pdb.set_trace()
+            #     continue
 
             # Loop through input synapse
             in_syn_id = n_.get_input_synpase_ids()
